@@ -100,25 +100,25 @@ def check_end(state):
                 flag += 1
                 break  # Stop after finding the pattern       
         
-      if flag == 2:
-            sp = state.regs.sp
-            lr = state.regs.lr
-            byte_s = state.arch.bytes
-            stack_lr = state.memory.load(sp, byte_s, endness=angr.archinfo.Endness.LE)
-            pre_target = state.callstack.ret_addr
-            if pre_target != 0:
-                try:
-                    pre_lr = state.globals['lr_list'][hex(pre_target)]
-                except KeyError:
-                    pass 
+            if flag == 2:
+                sp = state.regs.sp
+                lr = state.regs.lr
+                byte_s = state.arch.bytes
+                stack_lr = state.memory.load(sp, byte_s, endness=angr.archinfo.Endness.LE)
+                pre_target = state.callstack.ret_addr
+                if pre_target != 0:
+                    try:
+                        pre_lr = state.globals['lr_list'][hex(pre_target)]
+                    except KeyError:
+                        pass 
 
-            if stack_lr.symbolic:
-                num = check_symbolic_bits(state, stack_lr)
-                print_fp_overflow_msg(state, num//byte_s)
-                print_pc_overflow_msg(state, num//byte_s)
+                if stack_lr.symbolic:
+                    num = check_symbolic_bits(state, stack_lr)
+                    print_fp_overflow_msg(state, num//byte_s)
+                    print_pc_overflow_msg(state, num//byte_s)
         
-            else:
-                print("\033[31m[!] BOF 취약점을 찾지 못했습니다!\033[0m")
+                else:
+                    print("\033[31m[!] BOF 취약점을 찾지 못했습니다!\033[0m")
                 
 def check_overflow(binary, args=None, start_addr=None, limit=None):
     argv = ct.create_argv(binary, args)
@@ -168,8 +168,8 @@ def check_overflow(binary, args=None, start_addr=None, limit=None):
             print(simgr.errored[0])
         
 if __name__ == '__main__':
-    default="/mnt/c/Users/CSL/Downloads/test/C/testcases/CWE121_Stack_Based_Buffer_Overflow"
-    filename=default+"/s06/CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_memcpy_44.out"
+    default="/home/csl22/arm32"
+    filename=default+"/unstrip_canary_O0_arm32_CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memcpy_01.out"
     
     start_time = time.time()
     check_overflow(filename)
