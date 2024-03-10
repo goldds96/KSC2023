@@ -68,20 +68,6 @@ def print_bp_overflow_msg(state, byte_s):
 # Find function prologue
 def check_head(state):
     insns = state.project.factory.block(state.addr).capstone.insns
-    #if len(insns) > 2:
-    #    # Check for push rbp; mov rsp,rbp;
-    #    ins0 = insns[1].insn
-    #    ins1 = insns[2].insn
-    #    if len(ins0.operands) == 1 and len(ins1.operands) == 2:
-    #        ins0_name = ins0.mnemonic  # push
-    #        ins0_op0 = ins0.reg_name(ins0.operands[0].reg)  # rbp
-    #        ins1_name = ins1.mnemonic  # mov
-    #        ins1_op0 = ins1.reg_name(ins1.operands[0].reg)  # rsp
-    #        ins1_op1 = ins1.reg_name(ins1.operands[1].reg)  # rbp
-    #        
-    #        if ins0_name == "push" and ins0_op0 == "rbp" and ins1_name == "mov" and ins1_op0 == "rbp" and ins1_op1 == "rsp":
-    #            pre_target = state.callstack.ret_addr
-    #            state.globals['rbp_list'][hex(pre_target)] = state.regs.rbp
     if len(insns) > 2:
         # Check for push rbp; mov rsp,rbp;
         ins0 = insns[1].insn
