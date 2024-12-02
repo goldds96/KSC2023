@@ -5,6 +5,7 @@ from angr import sim_options as so
 from pwn import *
 import common_tools as ct
 import time
+import argparse
 
 def check_symbolic_bits(state, val):
     bits = 0
@@ -168,8 +169,10 @@ def check_overflow(binary, args=None, start_addr=None, limit=None):
             print(simgr.errored[0])
         
 if __name__ == '__main__':
-    default="/home/csl22/arm32"
-    filename=default+"/unstrip_canary_O0_arm32_CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memcpy_01.out"
+    parser = argparse.ArgumentParser(description="Find Buffer Overflow Vulnerabilities")
+    parser.add_argument('-f', '--file', required=True, help='Path to the binary file')
+    parser.add_argument('-l', '--limit', type=int, default=3, help='Limit for path comparison (default: 3)')
+    args = parser.parse_args()
     
     start_time = time.time()
     check_overflow(filename)
