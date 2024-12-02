@@ -5,6 +5,7 @@ from angr import sim_options as so
 from pwn import *
 import common_tools as ct
 import time
+import argparse
 
 def check_symbolic_bits(state, val):
     bits = 0
@@ -97,7 +98,6 @@ def check_end(state):
                 flag += 1
             if ins.insn.mnemonic == "ret":
                 flag += 1
-        #print("-----------------------------------------")
         
         if flag == 2:
             rsp = state.regs.rsp
@@ -130,7 +130,6 @@ def check_overflow(binary, args=None, start_addr=None, limit=None):
     if start_addr:
         state = project.factory.blank_state(addr=start_addr, add_options=extras)
     else:
-        #state = project.factory.full_init_state(args=argv, add_optons=extras)
         state = project.factory.blank_state(addr=main_entry, add_optons=extras)
         
     if limit:
@@ -169,11 +168,10 @@ def check_overflow(binary, args=None, start_addr=None, limit=None):
             print(simgr.errored[0])
         
 if __name__ == '__main__':
-    default="/mnt/c/Users/CSL/Downloads/test/C/testcases/CWE121_Stack_Based_Buffer_Overflow"
-    #filename="./a.out"
-    #filename="./stack_overflow_easy"
-    filename=default+"/s06/CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_memcpy_44.out"
-    #filename="/home/dskim/Juliet/C/testcases/CWE121_Stack_Based_Buffer_Overflow/s09/CWE121_Stack_Based_Buffer_Overflow__src_char_declare_cpy_01.out"
+    parser = argparse.ArgumentParser(description="Find Buffer Overflow Vulnerabilities")
+    parser.add_argument('-f', '--file', required=True, help='Path to the binary file')
+    parser.add_argument('-l', '--limit', type=int, default=3, help='Limit for path comparison (default: 3)')
+    args = parser.parse_args()
 
     start_time = time.time()
     check_overflow(filename)
